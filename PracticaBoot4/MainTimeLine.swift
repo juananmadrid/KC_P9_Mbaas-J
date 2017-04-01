@@ -7,7 +7,24 @@ class MainTimeLine: UITableViewController {
     var model = ["post1", "post2"]
     let cellIdentier = "POSTSCELL"
     
-    let rootRef = FIRDatabase.database()
+    // Creamos rama en DB para las news
+    let postsRef = FIRDatabase.database().reference().child("News")
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+
+        // Observamos los cambios en la DB para detectar cambios en tiempo real
+        // .value detecta cualquier cambio en esa rama
+        postsRef.observe(.value, with: { (snap) in
+            
+            print(snap)
+            /// Qué hacemos con este observer, regeneramos tabla cada nueva o mejor una vez al día ??
+            
+        }) { (error) in
+            print(error)
+        }
+    }
+    
     
     
     override func viewDidLoad() {
@@ -29,6 +46,79 @@ class MainTimeLine: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    
+    // MARK: - Athentication
+    
+    @IBAction func RegisterNewUser(_ sender: Any) {
+        
+        print("pulso Register)")
+        
+        // Creamos UIAlert
+        let alert = UIAlertController(title: "Authentication",
+                                      message: "Insert Dates",
+                                      preferredStyle: .alert)
+        // Creamos acción Save
+        let saveAction = UIAlertAction(title: "Save",
+                                       style: .default,
+                                       handler: { (action) in
+                                        let emailField = (alert.textFields?[0])!
+                                        let passField = (alert.textFields?[1])!
+                                        
+                                        if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+                                            print("Usuario o password en blanco")
+                                        }
+                                        
+                                        FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                            if let _ = error {
+                                                print("Error creando usuario \(user?.email)")
+                                                return      // Para que usuario vuelva a intentarlo
+                                            }
+                                            print("Usuario nuevo creado con éxito: \(user?.email)")
+                                        })
+        })
+        
+        // Añadimos accion Cancel
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
+            print("Acción crear nuevo usuario cancelada")
+        }
+        
+        // Añadimos texFields
+        alert.addTextField { (mailText) in
+            mailText.placeholder = "e-mail"
+        }
+        alert.addTextField { (passText) in
+            passText.placeholder = "password"
+        }
+        
+        // Añadimos acción Save y Cancel
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        // Mostramos UIAlert creado y configurado
+        present(alert, animated: true, completion: nil)
+
+        
+    }
+    
+
+    
+    @IBAction func Login(_ sender: Any) {
+        
+        print("pulso Login)")
+
+        let alert = UIAlertController(title: "Authentication",
+                                      message: "Introduzca sus datos",
+                                      preferredStyle: .alert)
+        
+        
+        
+        
+        
+        
+    }
+    
+
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {

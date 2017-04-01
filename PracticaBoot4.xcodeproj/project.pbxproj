@@ -116,8 +116,8 @@
 		5D931CF91E83F087005051E9 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				5D931CEE1E83EEEA005051E9 /* LaunchScreen.storyboard */,
 				5D931CFC1E83F110005051E9 /* TimeLine.storyboard */,
+				5D931CEE1E83EEEA005051E9 /* LaunchScreen.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
