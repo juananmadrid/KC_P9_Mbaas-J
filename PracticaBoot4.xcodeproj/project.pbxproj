@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5831A1041E8FD4190016BD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5831A1031E8FD4190016BD3F /* GoogleService-Info.plist */; };
 		5D931CE61E83EEEA005051E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D931CE51E83EEEA005051E9 /* AppDelegate.swift */; };
 		5D931CED1E83EEEA005051E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D931CEC1E83EEEA005051E9 /* Assets.xcassets */; };
 		5D931CF01E83EEEA005051E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D931CEE1E83EEEA005051E9 /* LaunchScreen.storyboard */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5831A1031E8FD4190016BD3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D931CE21E83EEEA005051E9 /* PracticaBoot4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticaBoot4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D931CE51E83EEEA005051E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D931CEC1E83EEEA005051E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -41,6 +43,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5831A1051E8FD41F0016BD3F /* Config Data */ = {
+			isa = PBXGroup;
+			children = (
+				5831A1031E8FD4190016BD3F /* GoogleService-Info.plist */,
+				5D931CF11E83EEEA005051E9 /* Info.plist */,
+			);
+			name = "Config Data";
+			sourceTree = "<group>";
+		};
 		5D931CD91E83EEEA005051E9 = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +71,7 @@
 		5D931CE41E83EEEA005051E9 /* PracticaBoot4 */ = {
 			isa = PBXGroup;
 			children = (
+				5831A1051E8FD41F0016BD3F /* Config Data */,
 				5D931CF71E83F069005051E9 /* AppDelegate */,
 				5D931CF81E83F076005051E9 /* ViewControllers */,
 				5D931CF91E83F087005051E9 /* Storyboards */,
@@ -99,7 +111,6 @@
 			isa = PBXGroup;
 			children = (
 				5D931CEC1E83EEEA005051E9 /* Assets.xcassets */,
-				5D931CF11E83EEEA005051E9 /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -182,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D931CFD1E83F110005051E9 /* TimeLine.storyboard in Resources */,
+				5831A1041E8FD4190016BD3F /* GoogleService-Info.plist in Resources */,
 				5D931CF01E83EEEA005051E9 /* LaunchScreen.storyboard in Resources */,
 				5D931CED1E83EEEA005051E9 /* Assets.xcassets in Resources */,
 			);
@@ -354,6 +366,7 @@
 				5D931CF61E83EEEA005051E9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
