@@ -42,8 +42,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Register"/>
                             <connections>
-                                <action selector="Login:" destination="93k-iG-gRG" eventType="touchUpInside" id="gN9-Gv-hVK"/>
-                                <action selector="RegisterNewUser:" destination="93k-iG-gRG" eventType="touchUpInside" id="gxh-eF-tjJ"/>
+                                <action selector="Authentication:" destination="93k-iG-gRG" eventType="touchUpInside" id="Sm4-Io-toJ"/>
                             </connections>
                         </button>
                         <rightBarButtonItems>
