@@ -1,9 +1,14 @@
 import UIKit
+import Firebase
+
 
 class MainTimeLine: UITableViewController {
 
     var model = ["post1", "post2"]
     let cellIdentier = "POSTSCELL"
+    
+    let rootRef = FIRDatabase.database()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
