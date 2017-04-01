@@ -49,53 +49,53 @@ class MainTimeLine: UITableViewController {
     
     // MARK: - Athentication
     
-    @IBAction func RegisterNewUser(_ sender: Any) {
-        
-        // Creamos UIAlert
-        let alert = UIAlertController(title: "Register",
-                                      message: "Insert Dates",
-                                      preferredStyle: .alert)
-        // Creamos acción Save
-        let saveAction = UIAlertAction(title: "Save",
-                                       style: .default,
-                                       handler: { (action) in
-                                        let emailField = (alert.textFields?[0])!
-                                        let passField = (alert.textFields?[1])!
-                                        
-                                        if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
-                                            print("Usuario o password en blanco")
-                                        }
-                                        
-                                        FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
-                                            if let _ = error {
-                                                print("Error creando usuario \(user?.email)")
-                                                return      // Para que usuario vuelva a intentarlo
-                                            }
-                                            print("Usuario nuevo creado con éxito: \(user?.email)")
-                                        })
-        })
-        
-        // Añadimos accion Cancel
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
-            print("Acción crear nuevo usuario cancelada")
-        }
-        
-        // Añadimos texFields
-        alert.addTextField { (mailText) in
-            mailText.placeholder = "e-mail"
-        }
-        alert.addTextField { (passText) in
-            passText.placeholder = "password"
-        }
-        
-        // Añadimos acción Save y Cancel
-        alert.addAction(saveAction)
-        alert.addAction(cancelAction)
-        
-        // Mostramos UIAlert creado y configurado
-        present(alert, animated: true, completion: nil)
-
-    }
+//    @IBAction func RegisterNewUser(_ sender: Any) {
+//        
+//        // Creamos UIAlert
+//        let alert = UIAlertController(title: "Register",
+//                                      message: "Insert Dates",
+//                                      preferredStyle: .alert)
+//        // Creamos acción Register
+//        let registerAction = UIAlertAction(title: "Save",
+//                                       style: .default,
+//                                       handler: { (action) in
+//                                        let emailField = (alert.textFields?[0])!
+//                                        let passField = (alert.textFields?[1])!
+//                                        
+//                                        if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+//                                            print("Usuario o password en blanco")
+//                                        }
+//                                        
+//                                        FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+//                                            if let _ = error {
+//                                                print("Error creando usuario \(user?.email)")
+//                                                return      // Para que usuario vuelva a intentarlo
+//                                            }
+//                                            print("Usuario nuevo creado con éxito: \(user?.email)")
+//                                        })
+//        })
+//        
+//        // Añadimos accion Cancel
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
+//            print("Acción crear nuevo usuario cancelada")
+//        }
+//        
+//        // Añadimos texFields
+//        alert.addTextField { (mailText) in
+//            mailText.placeholder = "e-mail"
+//        }
+//        alert.addTextField { (passText) in
+//            passText.placeholder = "password"
+//        }
+//        
+//        // Añadimos acción Save y Cancel
+//        alert.addAction(registerAction)
+//        alert.addAction(cancelAction)
+//        
+//        // Mostramos UIAlert creado y configurado
+//        present(alert, animated: true, completion: nil)
+//
+//    }
     
     
     @IBAction func Login(_ sender: Any) {
@@ -125,6 +125,26 @@ class MainTimeLine: UITableViewController {
                                                 })
         }
         
+        let registerAction = UIAlertAction(title: "Register",
+                                           style: .default,
+                                           handler: { (action) in
+                                            let emailField = (alert.textFields?[0])!
+                                            let passField = (alert.textFields?[1])!
+                                            
+                                            if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+                                                print("Usuario o password en blanco")
+                                            }
+                                            
+                                            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                                if let _ = error {
+                                                    print("Error creando usuario \(user?.email)")
+                                                    return      // Para que usuario vuelva a intentarlo
+                                                }
+                                                print("Usuario nuevo creado con éxito: \(user?.email)")
+                                            })
+        })
+
+        
         // Añadimos accion Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
             print("Login cancelado")
@@ -140,8 +160,9 @@ class MainTimeLine: UITableViewController {
         
         // Añadimos acción Save y Cancel
         alert.addAction(signAction)
+        alert.addAction(registerAction)
         alert.addAction(cancelAction)
-        
+
         // Mostramos UIAlert creado y configurado
         present(alert, animated: true, completion: nil)
         
@@ -149,6 +170,9 @@ class MainTimeLine: UITableViewController {
     }
     
 
+    
+    
+    
     
     // MARK: - Table view data source
 
