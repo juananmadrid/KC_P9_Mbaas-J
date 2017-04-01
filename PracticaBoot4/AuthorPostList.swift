@@ -1,11 +1,3 @@
-//
-//  AuthorPostList.swift
-//  PracticaBoot4
-//
-//  Created by Juan Antonio Martin Noguera on 23/03/2017.
-//  Copyright © 2017 COM. All rights reserved.
-//
-
 import UIKit
 
 class AuthorPostList: UITableViewController {
