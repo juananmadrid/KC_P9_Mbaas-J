@@ -51,10 +51,8 @@ class MainTimeLine: UITableViewController {
     
     @IBAction func RegisterNewUser(_ sender: Any) {
         
-        print("pulso Register)")
-        
         // Creamos UIAlert
-        let alert = UIAlertController(title: "Authentication",
+        let alert = UIAlertController(title: "Register",
                                       message: "Insert Dates",
                                       preferredStyle: .alert)
         // Creamos acción Save
@@ -97,22 +95,55 @@ class MainTimeLine: UITableViewController {
         // Mostramos UIAlert creado y configurado
         present(alert, animated: true, completion: nil)
 
-        
     }
     
-
     
     @IBAction func Login(_ sender: Any) {
         
         print("pulso Login)")
 
-        let alert = UIAlertController(title: "Authentication",
-                                      message: "Introduzca sus datos",
+        // Creamos UIAlert
+        let alert = UIAlertController(title: "Login",
+                                      message: "Insert Dates",
                                       preferredStyle: .alert)
         
+        let signAction = UIAlertAction(title: "Login",
+                                              style: .default) { (action) in
+                                                let emailField = (alert.textFields?[0])!
+                                                let passField = (alert.textFields?[1])!
+                                                
+                                                if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+                                                    print("Usuario o password en blanco")
+                                                }
+                                                
+                                                FIRAuth.auth()?.signIn(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                                    if let _ = error {
+                                                        print("Login Error: \(error?.localizedDescription)")
+                                                        return
+                                                    }
+                                                    print("Login correcto, usuario \(user?.email) autorizado")
+                                                })
+        }
         
+        // Añadimos accion Cancel
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
+            print("Login cancelado")
+        }
         
+        // Añadimos texFields
+        alert.addTextField { (mailText) in
+            mailText.placeholder = "e-mail"
+        }
+        alert.addTextField { (passText) in
+            passText.placeholder = "password"
+        }
         
+        // Añadimos acción Save y Cancel
+        alert.addAction(signAction)
+        alert.addAction(cancelAction)
+        
+        // Mostramos UIAlert creado y configurado
+        present(alert, animated: true, completion: nil)
         
         
     }
