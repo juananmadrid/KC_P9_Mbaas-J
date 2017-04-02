@@ -25,8 +25,6 @@ class MainTimeLine: UITableViewController {
         }
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -49,84 +47,20 @@ class MainTimeLine: UITableViewController {
     
      // MARK: - Athentication
     
-    
-    @IBAction func Login(_ sender: Any) {
-
+    @IBAction func LoginAuth(_ sender: Any) {
         showAuthAlert()
     }
     
-    func showAuthAlert() {
-        
-        // Creamos UIAlert
-        let alert = UIAlertController(title: "Login",
-                                      message: "Insert Dates",
-                                      preferredStyle: .alert)
-        
-        let signAction = UIAlertAction(title: "Login",
-                                              style: .default) { (action) in
-                                                let emailField = (alert.textFields?[0])!
-                                                let passField = (alert.textFields?[1])!
-                                                
-                                                if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
-                                                    print("Usuario o password en blanco")
-                                                }
-                                                
-                                                FIRAuth.auth()?.signIn(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
-                                                    if let _ = error {
-                                                        print("Login Error: \(error?.localizedDescription)")
-                                                        return
-                                                    }
-                                                    
-                                                    let storyboard = UIStoryboard(name: "TimeLine", bundle: nil)
-                                                    let viewController = storyboard.instantiateViewController(withIdentifier: "AuthorPostList")
-                                                    self.navigationController?.pushViewController(viewController, animated: true)
-                                                })
+    
+    @IBAction func Logout(_ sender: Any) {
+        if let _ = FIRAuth.auth()?.currentUser {
+            do {
+                try FIRAuth.auth()?.signOut()
+            } catch let error {
+                print("\(error.localizedDescription)")
+            }
         }
-        
-        let registerAction = UIAlertAction(title: "Register",
-                                           style: .default,
-                                           handler: { (action) in
-                                            let emailField = (alert.textFields?[0])!
-                                            let passField = (alert.textFields?[1])!
-                                            
-                                            if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
-                                                print("Usuario o password en blanco")
-                                            }
-                                            
-                                            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
-                                                if let _ = error {
-                                                    print("Error creando usuario \(user?.email)")
-                                                    return
-                                                }
-                                                print("Usuario nuevo creado con éxito: \(user?.email)")
-                                            })
-        })
-
-        
-        // Añadimos accion Cancel
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
-            print("Login cancelado")
-        }
-        
-        // Añadimos texFields
-        alert.addTextField { (mailText) in
-            mailText.placeholder = "e-mail"
-        }
-        alert.addTextField { (passText) in
-            passText.placeholder = "password"
-        }
-        
-        // Añadimos acción Save y Cancel
-        alert.addAction(signAction)
-        alert.addAction(registerAction)
-        alert.addAction(cancelAction)
-
-        // Mostramos UIAlert creado y configurado
-        present(alert, animated: true, completion: nil)
-        
     }
-    
-    
     
     // MARK: - Table view data source
 
@@ -166,5 +100,80 @@ class MainTimeLine: UITableViewController {
         }
     }
 
+    // MARK: - Utils
+    
+    func showAuthAlert() {
+        
+        // Creamos UIAlert
+        let alert = UIAlertController(title: "Login",
+                                      message: "Insert Dates",
+                                      preferredStyle: .alert)
+        
+        let signAction = UIAlertAction(title: "Login",
+                                       style: .default) { (action) in
+                                        let emailField = (alert.textFields?[0])!
+                                        let passField = (alert.textFields?[1])!
+                                        
+                                        if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+                                            print("Usuario o password en blanco")
+                                        }
+                                        
+                                        FIRAuth.auth()?.signIn(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                            if let _ = error {
+                                                print("Login Error: \(error?.localizedDescription)")
+                                                return
+                                            }
+                                            
+                                            let storyboard = UIStoryboard(name: "TimeLine", bundle: nil)
+                                            let viewController = storyboard.instantiateViewController(withIdentifier: "AuthorPostList")
+                                            self.navigationController?.pushViewController(viewController, animated: true)
+                                        })
+        }
+        
+        let registerAction = UIAlertAction(title: "Register",
+                                           style: .default,
+                                           handler: { (action) in
+                                            let emailField = (alert.textFields?[0])!
+                                            let passField = (alert.textFields?[1])!
+                                            
+                                            if (emailField.text?.isEmpty)!, (passField.text?.isEmpty)! {
+                                                print("Usuario o password en blanco")
+                                            }
+                                            
+                                            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                                if let _ = error {
+                                                    print("Error creando usuario \(user?.email)")
+                                                    return
+                                                }
+                                                print("Usuario nuevo creado con éxito: \(user?.email)")
+                                            })
+        })
+        
+        
+        // Añadimos accion Cancel
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
+            print("Login cancelado")
+        }
+        
+        // Añadimos texFields
+        alert.addTextField { (mailText) in
+            mailText.placeholder = "e-mail"
+        }
+        alert.addTextField { (passText) in
+            passText.placeholder = "password"
+        }
+        
+        // Añadimos acción Save y Cancel
+        alert.addAction(signAction)
+        alert.addAction(registerAction)
+        alert.addAction(cancelAction)
+        
+        // Mostramos UIAlert creado y configurado
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+
+    
 
 }
