@@ -1,6 +1,6 @@
 import UIKit
 import Firebase
-
+import Foundation
 
 class MainTimeLine: UITableViewController {
 
@@ -76,7 +76,10 @@ class MainTimeLine: UITableViewController {
                                                         print("Login Error: \(error?.localizedDescription)")
                                                         return
                                                     }
-                                                    print("Login correcto, usuario \(user?.email) autorizado")
+                                                    
+                                                    let storyboard = UIStoryboard(name: "TimeLine", bundle: nil)
+                                                    let viewController = storyboard.instantiateViewController(withIdentifier: "AuthorPostList")
+                                                    self.navigationController?.pushViewController(viewController, animated: true)
                                                 })
         }
         
@@ -93,7 +96,7 @@ class MainTimeLine: UITableViewController {
                                             FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
                                                 if let _ = error {
                                                     print("Error creando usuario \(user?.email)")
-                                                    return      // Para que usuario vuelva a intentarlo
+                                                    return
                                                 }
                                                 print("Usuario nuevo creado con éxito: \(user?.email)")
                                             })

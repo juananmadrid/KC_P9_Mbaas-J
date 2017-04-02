@@ -37,14 +37,6 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="yMV-An-MNP">
                         <nil key="title"/>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NTG-VU-QhC">
-                            <rect key="frame" x="147" y="7" width="81" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Register"/>
-                            <connections>
-                                <action selector="Authentication:" destination="93k-iG-gRG" eventType="touchUpInside" id="Sm4-Io-toJ"/>
-                            </connections>
-                        </button>
                         <rightBarButtonItems>
                             <barButtonItem title="Item" style="done" systemItem="compose" id="J3K-Up-OeR">
                                 <connections>
@@ -70,10 +62,10 @@
             </objects>
             <point key="canvasLocation" x="1071.2" y="184.85757121439281"/>
         </scene>
-        <!--Title-->
+        <!--AuthorPostListView-->
         <scene sceneID="8Bj-Bn-m5H">
             <objects>
-                <tableViewController id="fz7-Mj-aJx" customClass="AuthorPostList" customModule="PracticaBoot4" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AuthorPostList" title="AuthorPostListView" id="fz7-Mj-aJx" customClass="AuthorPostList" customModule="PracticaBoot4" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="0lP-ts-4C1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
