@@ -48,7 +48,12 @@ class MainTimeLine: UITableViewController {
      // MARK: - Athentication
     
     @IBAction func LoginAuth(_ sender: Any) {
-        showAuthAlert()
+        if let _ = FIRAuth.auth()?.currentUser {
+            launchViewAuthorPostList()
+        } else {
+            showAuthAlert()
+        }
+        
     }
     
     
@@ -123,10 +128,7 @@ class MainTimeLine: UITableViewController {
                                                 print("Login Error: \(error?.localizedDescription)")
                                                 return
                                             }
-                                            
-                                            let storyboard = UIStoryboard(name: "TimeLine", bundle: nil)
-                                            let viewController = storyboard.instantiateViewController(withIdentifier: "AuthorPostList")
-                                            self.navigationController?.pushViewController(viewController, animated: true)
+                                            self.launchViewAuthorPostList()
                                         })
         }
         
@@ -172,7 +174,13 @@ class MainTimeLine: UITableViewController {
         present(alert, animated: true, completion: nil)
         
     }
-    
+
+    func launchViewAuthorPostList() {
+        
+        let storyboard = UIStoryboard(name: "TimeLine", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "AuthorPostList")
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
 
     
 
