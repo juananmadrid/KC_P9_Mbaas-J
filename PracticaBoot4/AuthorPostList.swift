@@ -1,10 +1,12 @@
 import UIKit
+import Firebase
 
 class AuthorPostList: UITableViewController {
 
     let cellIdentifier = "POSTAUTOR"
     let numberOfSectionsInTable = 1
     
+    // var model : [Dictionary<String, Any>] = []
     var model = ["test1", "test2"]
     
     override func viewDidLoad() {
@@ -23,12 +25,31 @@ class AuthorPostList: UITableViewController {
     }
 
     
-    // MARK: - FIRIBASE Data Source
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // Uid de usuario
+        let currentUserId = FIRAuth.auth()?.currentUser?.uid
+        // Referencias a la DB
+        let rootRef = FIRDatabase.database().reference()            // root
+        let usersRef = rootRef.child("Users")                       // DB users
+        let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
+        
+        userCurrentRef.observe(FIRDataEventType.value, with: { (snap) in
+            
+            if snap.childrenCount != 0 {
+                let postDict = snap.value as! [String : AnyObject]
+                print(postDict)
+            } else {
+                print("Usuario no tiene ningún post")
+                return
+            }
+            
+        })  { (error) in
+            print(error)
+        }
+        
+    }
     
-    /// Descargar posts desde Firebase
-    
-    // var model: Dictionary<String, Any> = [:]
-
     
     
     

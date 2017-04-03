@@ -11,7 +11,7 @@ class Post {
 //    let valoration  :   Int
     
     private
-    var _dict : [String : Any]
+    var dict : [String : Any]
     
 
     init(author: String,
@@ -21,20 +21,31 @@ class Post {
          publishState: Bool,
          valoration: Int){
         
-        _dict = Dictionary()
+        dict = [:]
         
-        _dict["Author"] = author
-        _dict["Title"] = title
-        _dict["Description"] = description
-        _dict["PhotoName"] = photoName
-        _dict["PublishState"] = publishState
-        _dict["Valoration"] = valoration
-
+        dict = ["Author": author,
+                 "Title": title,
+                 "Description" : description,
+                 "Photo" : photoName,
+                 "State" : publishState,
+                 "Valoration" : valoration
+        ]
     }
-    
-    
-    
-    
+
+    convenience init(author: String,
+                     title: String,
+                     description: String,
+                     photoName: String,
+                     publishState: Bool) {
+        self.init(author: author,
+                  title: title,
+                  description: description,
+                  photoName: photoName,
+                  publishState: publishState,
+                  valoration: 0
+            
+                  )
+    }
     
     
 }
