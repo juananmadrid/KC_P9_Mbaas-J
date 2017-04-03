@@ -6,8 +6,10 @@ class AuthorPostList: UITableViewController {
     let cellIdentifier = "POSTAUTOR"
     let numberOfSectionsInTable = 1
     
-    // var model : [Dictionary<String, Any>] = []
-    var model = ["test1", "test2"]
+    typealias PostType = Dictionary<String, Any>
+    
+    var model : [PostType] = []
+    // var model = ["test1", "test2"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +39,20 @@ class AuthorPostList: UITableViewController {
         userCurrentRef.observe(FIRDataEventType.value, with: { (snap) in
             
             if snap.childrenCount != 0 {
-                let postDict = snap.value as! [String : AnyObject]
-                print(postDict)
+                
+                // Bajamos post y lo casteamos para obtener dictionary de dictionarys
+                let dict = snap.value as! [String : PostType]
+                
+                // Convertimos dictionary de dictionary en array de dictionary
+                self.model = self.conversToArray(dict)
+                
+                
             } else {
                 print("Usuario no tiene ningún post")
                 return
             }
+            
+            self.tableView.reloadData()
             
         })  { (error) in
             print(error)
@@ -50,8 +60,16 @@ class AuthorPostList: UITableViewController {
         
     }
     
-    
-    
+    func conversToArray(_ dict : Dictionary<String, Any>) -> [PostType] {
+        
+        var arrayDict : [PostType] = []
+
+        for (key, _) in dict {
+            arrayDict.append(dict[key] as! PostType)
+        }
+        return arrayDict
+    }
+
     
     // MARK: - Table view data source
 
@@ -69,8 +87,14 @@ class AuthorPostList: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.textLabel?.text = model[indexPath.row]
-    
+        
+        // cell.textLabel?.text = model[indexPath.row]
+        
+        let post = model[indexPath.row]
+        
+        cell.textLabel?.text = post["Title"] as! String?
+        cell.detailTextLabel?.text = post["Description"] as! String?
+        
         return cell
     }
     
