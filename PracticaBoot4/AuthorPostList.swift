@@ -3,17 +3,12 @@ import UIKit
 class AuthorPostList: UITableViewController {
 
     let cellIdentifier = "POSTAUTOR"
+    let numberOfSectionsInTable = 1
     
     var model = ["test1", "test2"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         self.refreshControl?.addTarget(self, action: #selector(hadleRefresh(_:)), for: UIControlEvents.valueChanged)
     }
@@ -28,13 +23,25 @@ class AuthorPostList: UITableViewController {
     }
 
     
+    // MARK: - FIRIBASE Data Source
+    
+    /// Descargar posts desde Firebase
+    
+    // var model: Dictionary<String, Any> = [:]
+
+    
+    
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return numberOfSectionsInTable
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if model.isEmpty {
+            return 0
+        }
         return model.count
     }
 

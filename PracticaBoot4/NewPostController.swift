@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 
 class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -27,13 +28,55 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
     @IBAction func takePhoto(_ sender: Any) {
         self.present(pushAlertCameraLibrary(), animated: true, completion: nil)
     }
+    
     @IBAction func publishAction(_ sender: Any) {
         isReadyToPublish = (sender as! UISwitch).isOn
     }
 
+    // persitimos en el cloud
     @IBAction func savePostInCloud(_ sender: Any) {
-        // preparado para implementar codigo que persita en el cloud 
+        
+        // Validamos datos antes de subirlos
+        guard let author = FIRAuth.auth()?.currentUser?.email,
+            let title = titlePostTxt.text else {
+                print("Error al introducir Autor o Título")
+                return
+        }
+        
+        let description = textPostTxt.text ?? ""
+        let photoName = ""
+        
+        /// FOTO? PESISTIR PRIMERO?
+
+        
+        let post : Dictionary<String, Any>
+        
+        post = ["Author": author,
+                "Title" : title,
+                "Description": description,
+                "PhotoName": photoName,
+                "PublishState": isReadyToPublish,
+                "Valoration" : 0]
+      
+        // Uid de usuario
+        let currentUserId = FIRAuth.auth()?.currentUser?.uid
+
+        // Referencias a la DB
+        let rootRef = FIRDatabase.database().reference()            // root
+        let usersRef = rootRef.child("Users")                       // DB users
+        let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
+        
+        // Generamos ID único para el nuevo posts con childByAutoId
+        let key = userCurrentRef.childByAutoId().key
+        
+        // Subimos el post colgándolo de esa key (Id único)
+        userCurrentRef.updateChildValues(["/\(key)" : post])
+        
     }
+    
+    
+    
+    
     /*
     // MARK: - Navigation
 
@@ -44,10 +87,12 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     */
 
-    // MARK: - funciones para la camara
+    // MARK: - Funciones para la CÁMARA
     internal func pushAlertCameraLibrary() -> UIAlertController {
+        // AlertController
         let actionSheet = UIAlertController(title: NSLocalizedString("Selecciona la fuente de la imagen", comment: ""), message: NSLocalizedString("", comment: ""), preferredStyle: .actionSheet)
         
+        // Actions
         let libraryBtn = UIAlertAction(title: NSLocalizedString("Ussar la libreria", comment: ""), style: .default) { (action) in
             self.takePictureFromCameraOrLibrary(.photoLibrary)
             
