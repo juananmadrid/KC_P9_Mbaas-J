@@ -6,6 +6,7 @@ class AuthorPostList: UITableViewController {
     let cellIdentifier = "POSTAUTOR"
     let numberOfSectionsInTable = 1
     
+    
     typealias PostType = Dictionary<String, Any>
     
     var model : [PostType] = []
@@ -26,6 +27,7 @@ class AuthorPostList: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: - Firebase 
     
     override func viewWillAppear(_ animated: Bool) {
         
@@ -44,7 +46,7 @@ class AuthorPostList: UITableViewController {
                 let dict = snap.value as! [String : PostType]
                 
                 // Convertimos dictionary de dictionary en array de dictionary
-                self.model = self.conversToArray(dict)
+                self.model = conversToArray(dict)
                 
                 
             } else {
@@ -60,16 +62,6 @@ class AuthorPostList: UITableViewController {
         
     }
     
-    func conversToArray(_ dict : Dictionary<String, Any>) -> [PostType] {
-        
-        var arrayDict : [PostType] = []
-
-        for (key, _) in dict {
-            arrayDict.append(dict[key] as! PostType)
-        }
-        return arrayDict
-    }
-
     
     // MARK: - Table view data source
 
@@ -93,7 +85,8 @@ class AuthorPostList: UITableViewController {
         let post = model[indexPath.row]
         
         cell.textLabel?.text = post["Title"] as! String?
-        cell.detailTextLabel?.text = post["Description"] as! String?
+        cell.detailTextLabel?.text = post["Author"] as! String?
+        // cell.imageView?.image = UIImage(named: )
         
         return cell
     }
@@ -110,50 +103,21 @@ class AuthorPostList: UITableViewController {
         return [publish, deleteRow]
     }
 
-   
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+// MARK: - UTILS
+
+public
+func conversToArray(_ dict : Dictionary<String, Any>) -> [Dictionary<String, Any>] {
+    
+    typealias PostType = Dictionary<String, Any>
+    
+    var arrayDict : [PostType] = []
+    
+    for (key, _) in dict {
+        arrayDict.append(dict[key] as! PostType)
+    }
+    return arrayDict
+}
+

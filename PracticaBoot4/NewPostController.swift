@@ -31,6 +31,13 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     @IBAction func publishAction(_ sender: Any) {
         isReadyToPublish = (sender as! UISwitch).isOn
+        
+        if isReadyToPublish == true {
+            let currentUserId = FIRAuth.auth()?.currentUser?.uid
+            
+        } else {
+            return
+        }
     }
 
     // persitimos en el cloud
@@ -46,8 +53,7 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         let description = textPostTxt.text ?? ""
         let photoName = ""
         
-        /// FOTO? PESISTIR PRIMERO?
-
+        /// IMAGEN. Subirla primero? Nombre? Id único?
         
         let post : Dictionary<String, Any>
         
@@ -63,6 +69,7 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
 
         // Referencias a la DB
         let rootRef = FIRDatabase.database().reference()            // root
+        let rootPublish = rootRef.child("publishedPosts")           // root de posts publicados
         let usersRef = rootRef.child("Users")                       // DB users
         let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
         
@@ -71,6 +78,11 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         
         // Subimos el post colgándolo de esa key (Id único)
         userCurrentRef.updateChildValues(["/\(key)" : post])
+        
+        // Si está para publicar la publicamos
+        if isReadyToPublish {
+            rootPublish.updateChildValues(["/\(key)" : post])
+        }
         
     }
     

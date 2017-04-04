@@ -4,25 +4,61 @@ import Foundation
 
 class MainTimeLine: UITableViewController {
 
-    var model = ["post1", "post2"]
+    let numberOfSectionsInTable = 1
+    typealias PostType = Dictionary<String, Any>
+    
+    var model : [PostType] = []
+    // var model = ["post1", "post2"]
     let cellIdentier = "POSTSCELL"
     
     // Creamos rama en DB para las news
     let postsRef = FIRDatabase.database().reference().child("News")
     
-    
+
+    // MARK: - FIREBASE
+
     override func viewWillAppear(_ animated: Bool) {
 
         // Observamos los cambios en la DB para detectar cambios en tiempo real
         // .value detecta cualquier cambio en esa rama
-        postsRef.observe(.value, with: { (snap) in
+        
+        // Referencias a la DB
+        let rootRef = FIRDatabase.database().reference()            // root
+        let usersRef = rootRef.child("Users")                       // DB users
+        
+        usersRef.observe(FIRDataEventType.value, with: { (snap) in
             
-            print(snap)
-            /// Qué hacemos con este observer, regeneramos tabla cada nueva o mejor una vez al día ??
+            if snap.childrenCount != 0 {
+                
+                // Bajamos post y lo casteamos para obtener dictionary de dictionarys
+                let dict = snap.value as! [String : PostType]
+                
+                // Convertimos dictionary de dictionary en array de dictionary
+                self.model = conversToArray(dict)
+                
+            } else {
+                print("No hay ningún post")
+                return
+            }
             
-        }) { (error) in
+            self.tableView.reloadData()
+            
+        })  { (error) in
             print(error)
         }
+        
+        
+        
+//        postsRef.observe(.value, with: { (snap) in
+//            
+//            print(snap)
+//            /// Qué hacemos con este observer, regeneramos tabla cada nueva o mejor una vez al día ??
+//            
+//        }) { (error) in
+//            print(error)
+//        }
+        
+        
     }
     
     override func viewDidLoad() {
@@ -43,7 +79,7 @@ class MainTimeLine: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     
      // MARK: - Athentication
     
@@ -71,19 +107,26 @@ class MainTimeLine: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 1
+        return numberOfSectionsInTable
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
+        if model.isEmpty {
+            return 0
+        }
         return model.count
     }
+    
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentier, for: indexPath)
-
-        cell.textLabel?.text = model[indexPath.row]
+        
+        let post = model[indexPath.row]
+        
+        cell.textLabel?.text = post["Title"] as! String?
+        cell.detailTextLabel?.text = post["Author"] as! String?
 
         return cell
     }
