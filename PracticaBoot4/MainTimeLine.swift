@@ -23,10 +23,10 @@ class MainTimeLine: UITableViewController {
         // .value detecta cualquier cambio en esa rama
         
         // Referencias a la DB
-        let rootRef = FIRDatabase.database().reference()            // root
-        let usersRef = rootRef.child("Users")                       // DB users
+        let rootRef = FIRDatabase.database().reference()
+        let rootPublish = rootRef.child("publishedPosts")
         
-        usersRef.observe(FIRDataEventType.value, with: { (snap) in
+        rootPublish.observe(FIRDataEventType.value, with: { (snap) in
             
             if snap.childrenCount != 0 {
                 
@@ -34,13 +34,8 @@ class MainTimeLine: UITableViewController {
                 let dict = snap.value as! [String : PostType]
                 
                 // Convertimos dictionary de dictionary en array de dictionary
-                let model2 = conversToArray(dict)
+                self.model = conversToArray(dict)
                 
-                for (key, value) in model2.enumerated(){
-                    // print(value)
-                    self.model.append(value)
-                }
-
             } else {
                 print("No hay ningún post")
                 return
