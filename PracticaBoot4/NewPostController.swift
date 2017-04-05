@@ -92,8 +92,6 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     
     
-    
-    
     /*
     // MARK: - Navigation
 

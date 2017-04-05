@@ -102,11 +102,26 @@ class AuthorPostList: UITableViewController {
             userCurrentRef.child(postId).updateChildValues(["PublishState" : true])
             
             // Recuperamos post seleccionado
-                // userCurrentRef.child(postId)
+            let postRef = userCurrentRef.child(postId)
             
-                // rootPublish.updateChildValues(["/\(postId)" : post])
+            postRef.observe(FIRDataEventType.value, with: { (snap) in
+                
+                let post = snap.value as! [String : Any]
+                
+                // Copiamos post en \publishedPosts
+                let rootRef = FIRDatabase.database().reference()
+                let rootPublish = rootRef.child("publishedPosts")
+                
+                rootPublish.updateChildValues(["/\(postId)" : post])
+                
+            }) { (error) in
+                print(error)
+            }
+    
             
         }
+        
+        
         publish.backgroundColor = UIColor.green
         let deleteRow = UITableViewRowAction(style: .destructive, title: "Eliminar") { (action, indexPath) in
             // codigo para eliminar post seleccionado
@@ -120,9 +135,6 @@ class AuthorPostList: UITableViewController {
             
             // Eliminamos post seleccionado
             userCurrentRef.child(postId).setValue(nil)
-
-            
-            
             
         }
         return [publish, deleteRow]
@@ -133,7 +145,7 @@ class AuthorPostList: UITableViewController {
 
 // MARK: - UTILS
 
-private
+public
 func ObtainUserCurrentRef () -> FIRDatabaseReference {
     
     // Uid de usuario

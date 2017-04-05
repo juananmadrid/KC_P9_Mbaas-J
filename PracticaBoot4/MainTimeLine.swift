@@ -34,8 +34,13 @@ class MainTimeLine: UITableViewController {
                 let dict = snap.value as! [String : PostType]
                 
                 // Convertimos dictionary de dictionary en array de dictionary
-                self.model = conversToArray(dict)
+                let model2 = conversToArray(dict)
                 
+                for (key, value) in model2.enumerated(){
+                    // print(value)
+                    self.model.append(value)
+                }
+
             } else {
                 print("No hay ningún post")
                 return
@@ -46,17 +51,6 @@ class MainTimeLine: UITableViewController {
         })  { (error) in
             print(error)
         }
-        
-        
-        
-//        postsRef.observe(.value, with: { (snap) in
-//            
-//            print(snap)
-//            /// Qué hacemos con este observer, regeneramos tabla cada nueva o mejor una vez al día ??
-//            
-//        }) { (error) in
-//            print(error)
-//        }
         
         
     }
@@ -187,7 +181,8 @@ class MainTimeLine: UITableViewController {
                                             
                                             FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
                                                 if let _ = error {
-                                                    print("Error creando usuario \(user?.email)")
+                                                    print("Error creando \(user?.email). \(error?.localizedDescription)")
+                                                    
                                                     return
                                                 }
                                                 print("Usuario nuevo creado con éxito: \(user?.email)")
