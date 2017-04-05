@@ -55,14 +55,16 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         
         /// IMAGEN. Subirla primero? Nombre? Id único?
         
-        let post : Dictionary<String, Any>
+        var post : Dictionary<String, Any>
         
         post = ["Author": author,
                 "Title" : title,
                 "Description": description,
                 "PhotoName": photoName,
                 "PublishState": isReadyToPublish,
-                "Valoration" : 0]
+                "Valoration" : 0,
+                "postId": ""
+        ]
       
         // Uid de usuario
         let currentUserId = FIRAuth.auth()?.currentUser?.uid
@@ -75,6 +77,9 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         
         // Generamos ID único para el nuevo posts con childByAutoId
         let key = userCurrentRef.childByAutoId().key
+        
+        // Añadimos a post el postId:
+        post.updateValue(key, forKey: "postId")
         
         // Subimos el post colgándolo de esa key (Id único)
         userCurrentRef.updateChildValues(["/\(key)" : post])

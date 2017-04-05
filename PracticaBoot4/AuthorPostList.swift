@@ -31,12 +31,7 @@ class AuthorPostList: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        // Uid de usuario
-        let currentUserId = FIRAuth.auth()?.currentUser?.uid
-        // Referencias a la DB
-        let rootRef = FIRDatabase.database().reference()            // root
-        let usersRef = rootRef.child("Users")                       // DB users
-        let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
+        let userCurrentRef = ObtainUserCurrentRef()
         
         userCurrentRef.observe(FIRDataEventType.value, with: { (snap) in
             
@@ -95,10 +90,30 @@ class AuthorPostList: UITableViewController {
         
         let publish = UITableViewRowAction(style: .normal, title: "Publicar") { (action, indexPath) in
             // Codigo para publicar el post
+            
+            // Obtenemos ruta de usuario
+            let userCurrentRef = ObtainUserCurrentRef()
+            
+            // Obtenemos referencia a la publicación de ese usuario en modelo (es la key del array)
+            
+            /// Aquí ya hemos perdido el postId?
+            let postDict = self.model[indexPath.row] as Dictionary
+            
+            let postId = postDict.keys
+            
+            // Cambiamos estado de la publicación
+           // userCurrentRef.child(postRef).setValue(["isReadyToPublish": true])
+            
+            // Copiamos ese Post en root publishedPosts
+            
+            
+            
+            
         }
         publish.backgroundColor = UIColor.green
         let deleteRow = UITableViewRowAction(style: .destructive, title: "Eliminar") { (action, indexPath) in
             // codigo para eliminar
+            
         }
         return [publish, deleteRow]
     }
@@ -108,6 +123,21 @@ class AuthorPostList: UITableViewController {
 
 // MARK: - UTILS
 
+private
+func ObtainUserCurrentRef () -> FIRDatabaseReference {
+    
+    // Uid de usuario
+    let currentUserId = FIRAuth.auth()?.currentUser?.uid
+    // Referencias a la DB
+    let rootRef = FIRDatabase.database().reference()
+    let usersRef = rootRef.child("Users")
+    let userCurrentRef = usersRef.child(currentUserId!)
+
+    return(userCurrentRef)
+}
+
+// Convertimos dictionary de dictionary en array de dictionary extrayendo de cada postId el dictionary
+// que lleva dentro y aprovechamos para añadir en cada dictionay su postId para usarlo en Publish y Delete
 public
 func conversToArray(_ dict : Dictionary<String, Any>) -> [Dictionary<String, Any>] {
     
