@@ -89,30 +89,40 @@ class AuthorPostList: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let publish = UITableViewRowAction(style: .normal, title: "Publicar") { (action, indexPath) in
-            // Codigo para publicar el post
+            // Codigo para publicar post seleccionado
             
             // Obtenemos ruta de usuario
             let userCurrentRef = ObtainUserCurrentRef()
             
-            // Obtenemos referencia a la publicación de ese usuario en modelo (es la key del array)
-            
-            /// Aquí ya hemos perdido el postId?
+            // Obtenemos referencia al post seleccionado (es la key del array)
             let postDict = self.model[indexPath.row] as Dictionary
+            let postId = postDict["postId"] as! String
             
-            let postId = postDict.keys
+            // Cambiamos estado del post seleccionado
+            userCurrentRef.child(postId).updateChildValues(["PublishState" : true])
             
-            // Cambiamos estado de la publicación
-           // userCurrentRef.child(postRef).setValue(["isReadyToPublish": true])
+            // Recuperamos post seleccionado
+                // userCurrentRef.child(postId)
             
-            // Copiamos ese Post en root publishedPosts
-            
-            
-            
+                // rootPublish.updateChildValues(["/\(postId)" : post])
             
         }
         publish.backgroundColor = UIColor.green
         let deleteRow = UITableViewRowAction(style: .destructive, title: "Eliminar") { (action, indexPath) in
-            // codigo para eliminar
+            // codigo para eliminar post seleccionado
+            
+            // Obtenemos ruta de usuario
+            let userCurrentRef = ObtainUserCurrentRef()
+            
+            // Obtenemos referencia al post seleccionado (es la key del array)
+            let postDict = self.model[indexPath.row] as Dictionary
+            let postId = postDict["postId"] as! String
+            
+            // Eliminamos post seleccionado
+            userCurrentRef.child(postId).setValue(nil)
+
+            
+            
             
         }
         return [publish, deleteRow]
