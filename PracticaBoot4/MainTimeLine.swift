@@ -19,6 +19,11 @@ class MainTimeLine: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
 
+        // Inicio de sesion automático como usuario Anonimo si no hay logado ningun usuario
+        if FIRAuth.auth()?.currentUser == nil {
+            loadAnonimousUser()
+        }
+                
         // Observamos los cambios en la DB para detectar cambios en tiempo real
         // .value detecta cualquier cambio en esa rama
         
@@ -73,22 +78,36 @@ class MainTimeLine: UITableViewController {
      // MARK: - Athentication
     
     @IBAction func LoginAuth(_ sender: Any) {
+        // Si usuario es anonimo o nil muestro alert
         if let _ = FIRAuth.auth()?.currentUser {
-            launchViewAuthorPostList()
+            
+            if (FIRAuth.auth()?.currentUser?.isAnonymous)! {
+                showAuthAlert()
+            }
+                launchViewAuthorPostList()
         } else {
             showAuthAlert()
         }
-        
     }
     
     
     @IBAction func Logout(_ sender: Any) {
+        
+        if (FIRAuth.auth()?.currentUser?.isAnonymous)! {
+            return
+        }
+        
+        
         if let _ = FIRAuth.auth()?.currentUser {
-            do {
-                try FIRAuth.auth()?.signOut()
-            } catch let error {
-                print("\(error.localizedDescription)")
-            }
+            loadAnonimousUser()
+    
+        // Dejo aquí código de singOut() para tenerlo de referencia
+          //  do {
+          //      try FIRAuth.auth()?.signOut()
+          //   } catch let error {
+          //       print("\(error.localizedDescription)")
+          //   }
+            
         }
     }
     
@@ -215,6 +234,16 @@ class MainTimeLine: UITableViewController {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
+    func loadAnonimousUser() {
+        FIRAuth.auth()?.signInAnonymously() { (user, error) in
+            if let _ = error {
+                print("Error creando Usuario Anonimo. \(error?.localizedDescription)")
+                return
+            }
+            print("Usuario Anonimo creado con éxito")
+        }
+
+    }
     
 
 }

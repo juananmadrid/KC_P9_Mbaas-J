@@ -106,13 +106,8 @@ class AuthorPostList: UITableViewController {
             
             // Copiamos post seleccionado en ruta \publishedPosts
             postRef.observeSingleEvent(of: .value, with: { (snap) in
-                // Usamos observeSingleEvent porque si solo lo usamos una vez
-                
-                // Validamos pq al borrar vuelve a buscar snap para mostrar en barra de publicar
-                // No sé porqué lo hace, pero lo hace y da eror si no lo valido al borrar un publicado
-                if snap.value == nil {
-                    return
-                }
+                // Usamos observeSingleEvent porque si solo lo usamos una vez, si usamos 
+                // observe hace crash pq vuelve a observarlo al borrar un publicado
                 
                 let post = snap.value as! [String : Any]
                 
