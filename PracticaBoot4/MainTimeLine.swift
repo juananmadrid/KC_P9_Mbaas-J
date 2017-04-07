@@ -23,14 +23,12 @@ class MainTimeLine: UITableViewController {
         if FIRAuth.auth()?.currentUser == nil {
             loadAnonimousUser()
         }
-                
-        // Observamos los cambios en la DB para detectar cambios en tiempo real
-        // .value detecta cualquier cambio en esa rama
         
-        // Referencias a la DB
         let rootRef = FIRDatabase.database().reference()
         let rootPublish = rootRef.child("publishedPosts")
-        
+
+        // Observamos los cambios en la DB para detectar cambios en tiempo real
+        // .value detecta cualquier cambio en esa rama
         rootPublish.observe(FIRDataEventType.value, with: { (snap) in
             
             if snap.childrenCount != 0 {
@@ -51,7 +49,6 @@ class MainTimeLine: UITableViewController {
         })  { (error) in
             print(error)
         }
-        
         
     }
     

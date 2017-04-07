@@ -81,6 +81,13 @@ class AuthorPostList: UITableViewController {
         
         cell.textLabel?.text = post["Title"] as! String?
         cell.detailTextLabel?.text = post["Author"] as! String?
+        
+        // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+        let nameImage = post["PhotoStorageName"]
+        
+        
+        
+        
         // cell.imageView?.image = UIImage(named: )
         
         return cell

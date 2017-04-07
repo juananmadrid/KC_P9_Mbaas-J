@@ -51,20 +51,41 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
         
         let description = textPostTxt.text ?? ""
-        let photoName = ""
+        // Subimos imagen después de reducir su tamaño
+        let image = UIImageJPEGRepresentation(self.imageCaptured, 0.5)
         
-        /// IMAGEN. Subirla primero? Nombre? Id único?
+        // Referencia al Storage de Firebase
+        let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+        let userImagesRef = storageRef.child("userImages")
+        // Generamos nombre aleatorio
+        let nameImage = UUID().uuidString as String
+        let nameJPG = "\(nameImage).jpg"
+        // Referencia de imagen a subir
+        let imageRef = userImagesRef.child(nameJPG)
+
+        
+        // Subimos imagen
+        imageRef.put(image!, metadata: nil, completion: { (metadata, error) in
+            if (error != nil) {
+                print("Error al subir la imagen")
+            } else {
+                print("Imagen subida correctamente")
+                // downloadURL = metadata!.downloadURL()
+            }
+        })
+        
         
         var post : Dictionary<String, Any>
         
         post = ["Author": author,
                 "Title" : title,
                 "Description": description,
-                "PhotoName": photoName,
+                "PhotoStorageName": nameJPG,
                 "PublishState": isReadyToPublish,
                 "Valoration" : 0,
                 "postId": ""
         ]
+        // Como ref. de la imagen en post podemos usar el nombre, url u gs.
       
         // Uid de usuario
         let currentUserId = FIRAuth.auth()?.currentUser?.uid
@@ -108,7 +129,7 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         let actionSheet = UIAlertController(title: NSLocalizedString("Selecciona la fuente de la imagen", comment: ""), message: NSLocalizedString("", comment: ""), preferredStyle: .actionSheet)
         
         // Actions
-        let libraryBtn = UIAlertAction(title: NSLocalizedString("Ussar la libreria", comment: ""), style: .default) { (action) in
+        let libraryBtn = UIAlertAction(title: NSLocalizedString("Usar la libreria", comment: ""), style: .default) { (action) in
             self.takePictureFromCameraOrLibrary(.photoLibrary)
             
         }
@@ -152,6 +173,8 @@ extension NewPostController {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         imageCaptured = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
         self.dismiss(animated: false, completion: {
+            
+            
         })
     }
     
