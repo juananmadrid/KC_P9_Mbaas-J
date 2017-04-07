@@ -104,7 +104,15 @@ class AuthorPostList: UITableViewController {
             // Recuperamos post seleccionado
             let postRef = userCurrentRef.child(postId)
             
-            postRef.observe(FIRDataEventType.value, with: { (snap) in
+            // Copiamos post seleccionado en ruta \publishedPosts
+            postRef.observeSingleEvent(of: .value, with: { (snap) in
+                // Usamos observeSingleEvent porque si solo lo usamos una vez
+                
+                // Validamos pq al borrar vuelve a buscar snap para mostrar en barra de publicar
+                // No sé porqué lo hace, pero lo hace y da eror si no lo valido al borrar un publicado
+                if snap.value == nil {
+                    return
+                }
                 
                 let post = snap.value as! [String : Any]
                 
@@ -126,8 +134,10 @@ class AuthorPostList: UITableViewController {
         let deleteRow = UITableViewRowAction(style: .destructive, title: "Eliminar") { (action, indexPath) in
             // codigo para eliminar post seleccionado
             
-            // Obtenemos ruta de usuario
+            // Obtenemos ruta de usuario y anuncios publicados
             let userCurrentRef = ObtainUserCurrentRef()
+            let rootRef = FIRDatabase.database().reference()
+            let rootPublish = rootRef.child("publishedPosts")
             
             // Obtenemos referencia al post seleccionado (es la key del array)
             let postDict = self.model[indexPath.row] as Dictionary
@@ -135,6 +145,7 @@ class AuthorPostList: UITableViewController {
             
             // Eliminamos post seleccionado
             userCurrentRef.child(postId).setValue(nil)
+            rootPublish.child(postId).setValue(nil)
             
         }
         return [publish, deleteRow]
