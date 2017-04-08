@@ -8,11 +8,9 @@ class MainTimeLine: UITableViewController {
     typealias PostType = Dictionary<String, Any>
     
     var model : [PostType] = []
-    // var model = ["post1", "post2"]
     let cellIdentier = "POSTSCELL"
     
-    // Creamos rama en DB para las news
-    let postsRef = FIRDatabase.database().reference().child("News")
+    // Creamos rama en DB para las newvar   let postsRef = FIRDatabase.database().reference().child("News")
     
 
     // MARK: - FIREBASE
@@ -145,7 +143,7 @@ class MainTimeLine: UITableViewController {
             let imageRef = userImagesRef.child(nameImage)
             
             // Descargamos imagen
-            let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
+            _ = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
                 if (error != nil) {
                     print("error el bajar la imagen")
                 } else {
@@ -179,7 +177,13 @@ class MainTimeLine: UITableViewController {
         // Pass the selected object to the new view controller.
         if segue.identifier == "ShowRatingPost" {
             let vc = segue.destination as! PostReview
-            // aqui pasamos el item selecionado
+            
+            // aqui pasamos el post seleccionado
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+
+                vc.post = model[indexPath.row]
+            }
+            
         }
     }
 

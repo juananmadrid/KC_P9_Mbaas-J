@@ -10,7 +10,6 @@ class AuthorPostList: UITableViewController {
     typealias PostType = Dictionary<String, Any>
     
     var model : [PostType] = []
-    // var model = ["test1", "test2"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,14 +106,11 @@ class AuthorPostList: UITableViewController {
                         cell.imageView?.image = image
                         tableView.reloadData()
                     }
-                    
                 }
-                
             }
             
         }
-        
-        
+
         return cell
     }
     
@@ -177,7 +173,6 @@ class AuthorPostList: UITableViewController {
                 userCurrentRef.child(postId).setValue(nil)
                 rootPublish.child(postId).setValue(nil)
             }
-            
         }
         return [publish, deleteRow]
     }

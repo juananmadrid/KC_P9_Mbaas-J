@@ -33,7 +33,7 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         isReadyToPublish = (sender as! UISwitch).isOn
         
         if isReadyToPublish == true {
-            let currentUserId = FIRAuth.auth()?.currentUser?.uid
+            _ = FIRAuth.auth()?.currentUser?.uid
             
         } else {
             return
@@ -103,7 +103,9 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
                 "Description": description,
                 "PhotoStorageName": nameJPG,
                 "PublishState": isReadyToPublish,
-                "Valoration" : 0,
+                "MedValoration" : 0,
+                "NumValorations" : 0,
+                "TotalValoration" : 0,
                 "postId": "",
                 "Date" : utcTimeZoneStr
         ]
