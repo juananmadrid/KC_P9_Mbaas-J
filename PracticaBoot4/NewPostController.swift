@@ -51,8 +51,16 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
         
         let description = textPostTxt.text ?? ""
-        // Subimos imagen después de reducir su tamaño
-        let image = UIImageJPEGRepresentation(self.imageCaptured, 0.5)
+        
+
+        
+        // Subimos imagen después de reducir su tamaño. Si no hay imagen subimos imagen vacía
+        let defaultImage = UIImage(named: "emptyImage.jpg")
+        var image = UIImageJPEGRepresentation(defaultImage!, 0.5)
+        
+        if imageCaptured != nil {
+            image = UIImageJPEGRepresentation(self.imageCaptured, 0.5)
+        }
         
         // Referencia al Storage de Firebase
         let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")

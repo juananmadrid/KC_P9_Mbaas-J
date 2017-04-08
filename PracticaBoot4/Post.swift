@@ -3,47 +3,43 @@ import UIKit
 
 class Post {
     
-//    let author      :   String
-//    let title       :   String
-//    let description :   String
-//    let photoName   :   String
-//    let publishState :  Bool
-//    let valoration  :   Int
-    
     private
-    var dict : [String : Any]
+    var post : [String : Any]
     
-
+    
     init(author: String,
          title: String,
          description: String,
-         photoName: String,
+         photoStorageName: String,
          publishState: Bool,
-         valoration: Int){
+         valoration: Int,
+         postId: Int){
         
-        dict = [:]
+        post = [:]
         
-        dict = ["Author": author,
+        post = ["Author": author,
                  "Title": title,
                  "Description" : description,
-                 "Photo" : photoName,
-                 "State" : publishState,
-                 "Valoration" : valoration
+                 "PhotoStorageName" : photoStorageName,
+                 "PublishState" : publishState,
+                 "Valoration" : valoration,
+                 "postId": postId
         ]
     }
 
+    
     convenience init(author: String,
                      title: String,
                      description: String,
-                     photoName: String,
-                     publishState: Bool) {
+                     photoStorageName: String,
+                     publishState: Bool,
+                     postId: Int) {
         self.init(author: author,
                   title: title,
                   description: description,
-                  photoName: photoName,
+                  photoStorageName: photoStorageName,
                   publishState: publishState,
-                  valoration: 0
-            
+                  postId: 0
                   )
     }
     

@@ -133,6 +133,25 @@ class MainTimeLine: UITableViewController {
         cell.textLabel?.text = post["Title"] as! String?
         cell.detailTextLabel?.text = post["Author"] as! String?
 
+        // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+        let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+        let userImagesRef = storageRef.child("userImages")
+        // Referencia de la imagen
+        let nameImage = post["PhotoStorageName"] as! String
+        let imageRef = userImagesRef.child(nameImage)
+        
+        // Descargamos imagen
+        let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
+            if (error != nil) {
+                print("error el bajar la imagen")
+            } else {
+                let image = UIImage(data: data! as Data)
+                cell.imageView?.image = image
+            }
+            
+        }
+
+        
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
