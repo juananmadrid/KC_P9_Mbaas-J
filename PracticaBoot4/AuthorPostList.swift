@@ -105,6 +105,7 @@ class AuthorPostList: UITableViewController {
                     
                     DispatchQueue.main.async {
                         cell.imageView?.image = image
+                        tableView.reloadData()
                     }
                     
                 }

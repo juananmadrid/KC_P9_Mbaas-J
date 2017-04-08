@@ -153,6 +153,9 @@ class MainTimeLine: UITableViewController {
                     
                     DispatchQueue.main.async {
                         cell.imageView?.image = image
+                        // Recargamos tabla para cargar las imágenes al arrancar la vista
+                        // sino, como se cargan aquí dentro de la closure se cargarían después
+                        tableView.reloadData()
                     }
                 }
             }
