@@ -31,28 +31,34 @@ class AuthorPostList: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        let userCurrentRef = ObtainUserCurrentRef()
-        
-        userCurrentRef.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
+        DispatchQueue.global().sync {
             
-            if snap.childrenCount != 0 {
+            let userCurrentRef = ObtainUserCurrentRef()
+            
+            userCurrentRef.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
                 
-                // Bajamos post y lo casteamos para obtener dictionary de dictionarys
-                let dict = snap.value as! [String : PostType]
+                if snap.childrenCount != 0 {
+                    
+                    // Bajamos post y lo casteamos para obtener dictionary de dictionarys
+                    let dict = snap.value as! [String : PostType]
+                    
+                    // Convertimos dictionary de dictionary en array de dictionary
+                    self.model = conversToArray(dict)
+                    
+                    
+                } else {
+                    print("Usuario no tiene ningún post")
+                    return
+                }
                 
-                // Convertimos dictionary de dictionary en array de dictionary
-                self.model = conversToArray(dict)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
                 
                 
-            } else {
-                print("Usuario no tiene ningún post")
-                return
+            })  { (error) in
+                print(error)
             }
-            
-            self.tableView.reloadData()
-            
-        })  { (error) in
-            print(error)
         }
         
     }
@@ -82,23 +88,31 @@ class AuthorPostList: UITableViewController {
         cell.textLabel?.text = post["Title"] as! String?
         cell.detailTextLabel?.text = post["Author"] as! String?
         
-        // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
-        let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
-        let userImagesRef = storageRef.child("userImages")
-        // Referencia de la imagen
-        let nameImage = post["PhotoStorageName"] as! String
-        let imageRef = userImagesRef.child(nameImage)
-        
-        // Descargamos imagen 
-        let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
-            if (error != nil) {
-                print("error el bajar la imagen")
-            } else {
-                let image = UIImage(data: data! as Data)
-                cell.imageView?.image = image
+        DispatchQueue.global().sync {
+            // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+            let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+            let userImagesRef = storageRef.child("userImages")
+            // Referencia de la imagen
+            let nameImage = post["PhotoStorageName"] as! String
+            let imageRef = userImagesRef.child(nameImage)
+            
+            // Descargamos imagen
+            let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
+                if (error != nil) {
+                    print("error el bajar la imagen")
+                } else {
+                    let image = UIImage(data: data! as Data)
+                    
+                    DispatchQueue.main.async {
+                        cell.imageView?.image = image
+                    }
+                    
+                }
+                
             }
             
         }
+        
         
         return cell
     }
@@ -121,23 +135,24 @@ class AuthorPostList: UITableViewController {
             // Recuperamos post seleccionado
             let postRef = userCurrentRef.child(postId)
             
-            // Copiamos post seleccionado en ruta \publishedPosts
-            postRef.observeSingleEvent(of: .value, with: { (snap) in
-                // Usamos observeSingleEvent porque si solo lo usamos una vez, si usamos 
-                // observe hace crash pq vuelve a observarlo al borrar un publicado
-                
-                let post = snap.value as! [String : Any]
-                
-                // Copiamos post en \publishedPosts
-                let rootRef = FIRDatabase.database().reference()
-                let rootPublish = rootRef.child("publishedPosts")
-                
-                rootPublish.updateChildValues(["/\(postId)" : post])
-                
-            }) { (error) in
-                print(error)
+            DispatchQueue.global().sync {
+                // Copiamos post seleccionado en ruta \publishedPosts
+                postRef.observeSingleEvent(of: .value, with: { (snap) in
+                    // Usamos observeSingleEvent porque si solo lo usamos una vez, si usamos
+                    // observe hace crash pq vuelve a observarlo al borrar un publicado
+                    
+                    let post = snap.value as! [String : Any]
+                    
+                    // Copiamos post en \publishedPosts
+                    let rootRef = FIRDatabase.database().reference()
+                    let rootPublish = rootRef.child("publishedPosts")
+                    
+                    rootPublish.updateChildValues(["/\(postId)" : post])
+                    
+                }) { (error) in
+                    print(error)
+                }
             }
-    
             
         }
         
@@ -146,18 +161,21 @@ class AuthorPostList: UITableViewController {
         let deleteRow = UITableViewRowAction(style: .destructive, title: "Eliminar") { (action, indexPath) in
             // codigo para eliminar post seleccionado
             
-            // Obtenemos ruta de usuario y anuncios publicados
-            let userCurrentRef = ObtainUserCurrentRef()
-            let rootRef = FIRDatabase.database().reference()
-            let rootPublish = rootRef.child("publishedPosts")
-            
-            // Obtenemos referencia al post seleccionado (es la key del array)
-            let postDict = self.model[indexPath.row] as Dictionary
-            let postId = postDict["postId"] as! String
-            
-            // Eliminamos post seleccionado
-            userCurrentRef.child(postId).setValue(nil)
-            rootPublish.child(postId).setValue(nil)
+            DispatchQueue.global().sync {
+                
+                // Obtenemos ruta de usuario y anuncios publicados
+                let userCurrentRef = ObtainUserCurrentRef()
+                let rootRef = FIRDatabase.database().reference()
+                let rootPublish = rootRef.child("publishedPosts")
+                
+                // Obtenemos referencia al post seleccionado (es la key del array)
+                let postDict = self.model[indexPath.row] as Dictionary
+                let postId = postDict["postId"] as! String
+                
+                // Eliminamos post seleccionado
+                userCurrentRef.child(postId).setValue(nil)
+                rootPublish.child(postId).setValue(nil)
+            }
             
         }
         return [publish, deleteRow]

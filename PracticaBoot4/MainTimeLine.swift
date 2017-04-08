@@ -19,35 +19,42 @@ class MainTimeLine: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
 
-        // Inicio de sesion automático como usuario Anonimo si no hay logado ningun usuario
-        if FIRAuth.auth()?.currentUser == nil {
-            loadAnonimousUser()
-        }
-        
-        let rootRef = FIRDatabase.database().reference()
-        let rootPublish = rootRef.child("publishedPosts")
-
-        // Observamos los cambios en la DB para detectar cambios en tiempo real
-        // .value detecta cualquier cambio en esa rama
-           rootPublish.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
-            if snap.childrenCount != 0 {
-                
-                // Bajamos post y lo casteamos para obtener dictionary de dictionarys
-                let dict = snap.value as! [String : PostType]
-                
-                // Convertimos dictionary de dictionary en array de dictionary
-                self.model = conversToArray(dict)
-                
-            } else {
-                print("No hay ningún post")
-                return
+        DispatchQueue.global().async {
+            // Inicio de sesion automático como usuario Anonimo si no hay logado ningun usuario
+            if FIRAuth.auth()?.currentUser == nil {
+                self.loadAnonimousUser()
             }
             
-            self.tableView.reloadData()
+            let rootRef = FIRDatabase.database().reference()
+            let rootPublish = rootRef.child("publishedPosts")
             
-        })  { (error) in
-            print(error)
+            // Observamos los cambios en la DB para detectar cambios en tiempo real
+            // .value detecta cualquier cambio en esa rama
+            rootPublish.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
+                if snap.childrenCount != 0 {
+                    
+                    // Bajamos post y lo casteamos para obtener dictionary de dictionarys
+                    let dict = snap.value as! [String : PostType]
+                    
+                    // Convertimos dictionary de dictionary en array de dictionary
+                    self.model = conversToArray(dict)
+                    
+                } else {
+                    print("No hay ningún post")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+                
+            })  { (error) in
+                print(error)
+            }
+            
         }
+        
         
     }
     
@@ -128,27 +135,33 @@ class MainTimeLine: UITableViewController {
         cell.textLabel?.text = post["Title"] as! String?
         cell.detailTextLabel?.text = post["Author"] as! String?
 
-        // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
-        let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
-        let userImagesRef = storageRef.child("userImages")
-        // Referencia de la imagen
-        let nameImage = post["PhotoStorageName"] as! String
-        let imageRef = userImagesRef.child(nameImage)
-        
-        // Descargamos imagen
-        let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
-            if (error != nil) {
-                print("error el bajar la imagen")
-            } else {
-                let image = UIImage(data: data! as Data)
-                cell.imageView?.image = image
+        DispatchQueue.global().async {
+            
+            // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+            let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+            let userImagesRef = storageRef.child("userImages")
+            // Referencia de la imagen
+            let nameImage = post["PhotoStorageName"] as! String
+            let imageRef = userImagesRef.child(nameImage)
+            
+            // Descargamos imagen
+            let data = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
+                if (error != nil) {
+                    print("error el bajar la imagen")
+                } else {
+                    let image = UIImage(data: data! as Data)
+                    
+                    DispatchQueue.main.async {
+                        cell.imageView?.image = image
+                    }
+                }
             }
             
         }
-
-        
         return cell
     }
+    
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         performSegue(withIdentifier: "ShowRatingPost", sender: indexPath)
@@ -185,13 +198,16 @@ class MainTimeLine: UITableViewController {
                                             print("Usuario o password en blanco")
                                         }
                                         
-                                        FIRAuth.auth()?.signIn(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
-                                            if let _ = error {
-                                                print("Login Error: \(error?.localizedDescription)")
-                                                return
-                                            }
-                                            self.launchViewAuthorPostList()
-                                        })
+                                        DispatchQueue.global().sync {
+                                            FIRAuth.auth()?.signIn(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                                if let _ = error {
+                                                    print("Login Error: \(error?.localizedDescription)")
+                                                    return
+                                                }
+                                                self.launchViewAuthorPostList()
+                                            })
+                                        }
+                                        
         }
         
         let registerAction = UIAlertAction(title: "Register",
@@ -204,14 +220,16 @@ class MainTimeLine: UITableViewController {
                                                 print("Usuario o password en blanco")
                                             }
                                             
-                                            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
-                                                if let _ = error {
-                                                    print("Error creando \(user?.email). \(error?.localizedDescription)")
-                                                    
-                                                    return
-                                                }
-                                                print("Usuario nuevo creado con éxito: \(user?.email)")
-                                            })
+                                            DispatchQueue.global().sync {
+                                                FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passField.text!, completion: { (user, error) in
+                                                    if let _ = error {
+                                                        print("Error creando \(user?.email). \(error?.localizedDescription)")
+                                                        return
+                                                    }
+                                                    print("Usuario nuevo creado con éxito: \(user?.email)")
+                                                })
+                                            }
+                                            
         })
         
         

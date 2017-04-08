@@ -72,15 +72,19 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         let imageRef = userImagesRef.child(nameJPG)
 
         
-        // Subimos imagen
-        imageRef.put(image!, metadata: nil, completion: { (metadata, error) in
-            if (error != nil) {
-                print("Error al subir la imagen")
-            } else {
-                print("Imagen subida correctamente")
-                // downloadURL = metadata!.downloadURL()
-            }
-        })
+        DispatchQueue.global().async {
+            
+            // Subimos imagen
+            imageRef.put(image!, metadata: nil, completion: { (metadata, error) in
+                if (error != nil) {
+                    print("Error al subir la imagen")
+                } else {
+                    print("Imagen subida correctamente")
+                    // downloadURL = metadata!.downloadURL()
+                }
+            })
+        }
+        
         
         // Añadimos fecha de creación para ordenar por más reciente
         let date = Date()
@@ -105,29 +109,33 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
         ]
         // Como ref. de la imagen en post podemos usar el nombre, url u gs.
       
-        // Uid de usuario
-        let currentUserId = FIRAuth.auth()?.currentUser?.uid
-
-        // Referencias a la DB
-        let rootRef = FIRDatabase.database().reference()            // root
-        let rootPublish = rootRef.child("publishedPosts")           // root de posts publicados
-        let usersRef = rootRef.child("Users")                       // DB users
-        let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
-        
-        // Generamos ID único para el nuevo posts con childByAutoId
-        let key = userCurrentRef.childByAutoId().key
-        
-        // Añadimos a post el postId:
-        post.updateValue(key, forKey: "postId")
-        
-        // Subimos el post colgándolo de esa key (Id único)
-        userCurrentRef.updateChildValues(["/\(key)" : post])
-        
-        // Si está para publicar la publicamos
-        if isReadyToPublish {
-            rootPublish.updateChildValues(["/\(key)" : post])
+        DispatchQueue.global().async{
+            // Uid de usuario
+            let currentUserId = FIRAuth.auth()?.currentUser?.uid
+            
+            // Referencias a la DB
+            let rootRef = FIRDatabase.database().reference()            // root
+            let rootPublish = rootRef.child("publishedPosts")           // root de posts publicados
+            let usersRef = rootRef.child("Users")                       // DB users
+            let userCurrentRef = usersRef.child(currentUserId!)         // DB de currentuser
+            
+            // Generamos ID único para el nuevo posts con childByAutoId
+            let key = userCurrentRef.childByAutoId().key
+            
+            // Añadimos a post el postId:
+            post.updateValue(key, forKey: "postId")
+            
+            // Subimos el post colgándolo de esa key (Id único)
+            userCurrentRef.updateChildValues(["/\(key)" : post])
+            
+            // Si está para publicar la publicamos
+            if self.isReadyToPublish {
+                rootPublish.updateChildValues(["/\(key)" : post])
+            }
+            
         }
         
+
     }
     
     
@@ -191,7 +199,6 @@ extension NewPostController {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         imageCaptured = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
         self.dismiss(animated: false, completion: {
-            
             
         })
     }
