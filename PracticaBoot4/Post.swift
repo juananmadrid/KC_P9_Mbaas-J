@@ -13,7 +13,8 @@ class Post {
          photoStorageName: String,
          publishState: Bool,
          valoration: Int,
-         postId: Int){
+         postId: Int,
+         date: Date){
         
         post = [:]
         
@@ -23,7 +24,8 @@ class Post {
                  "PhotoStorageName" : photoStorageName,
                  "PublishState" : publishState,
                  "Valoration" : valoration,
-                 "postId": postId
+                 "postId": postId,
+                 "Date" : Date()
         ]
     }
 
@@ -33,13 +35,15 @@ class Post {
                      description: String,
                      photoStorageName: String,
                      publishState: Bool,
-                     postId: Int) {
+                     postId: Int,
+                     date: Date) {
         self.init(author: author,
                   title: title,
                   description: description,
                   photoStorageName: photoStorageName,
                   publishState: publishState,
-                  postId: 0
+                  postId: 0,
+                  date: date
                   )
     }
     

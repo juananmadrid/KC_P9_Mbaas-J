@@ -82,7 +82,16 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
             }
         })
         
+        // Añadimos fecha de creación para ordenar por más reciente
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_ES_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        let utcTimeZoneStr = formatter.string(from: date)
         
+        
+        // Creamos post
         var post : Dictionary<String, Any>
         
         post = ["Author": author,
@@ -91,7 +100,8 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
                 "PhotoStorageName": nameJPG,
                 "PublishState": isReadyToPublish,
                 "Valoration" : 0,
-                "postId": ""
+                "postId": "",
+                "Date" : utcTimeZoneStr
         ]
         // Como ref. de la imagen en post podemos usar el nombre, url u gs.
       

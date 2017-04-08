@@ -33,7 +33,7 @@ class AuthorPostList: UITableViewController {
         
         let userCurrentRef = ObtainUserCurrentRef()
         
-        userCurrentRef.observe(FIRDataEventType.value, with: { (snap) in
+        userCurrentRef.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
             
             if snap.childrenCount != 0 {
                 

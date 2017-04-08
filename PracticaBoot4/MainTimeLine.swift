@@ -29,8 +29,7 @@ class MainTimeLine: UITableViewController {
 
         // Observamos los cambios en la DB para detectar cambios en tiempo real
         // .value detecta cualquier cambio en esa rama
-        rootPublish.observe(FIRDataEventType.value, with: { (snap) in
-            
+           rootPublish.queryOrdered(byChild: "Date").observe(FIRDataEventType.value, with: { (snap) in
             if snap.childrenCount != 0 {
                 
                 // Bajamos post y lo casteamos para obtener dictionary de dictionarys
@@ -89,12 +88,10 @@ class MainTimeLine: UITableViewController {
     
     
     @IBAction func Logout(_ sender: Any) {
-        
+        // Logout provoca que usuario pase a ser Anonimous
         if (FIRAuth.auth()?.currentUser?.isAnonymous)! {
             return
         }
-        
-        
         if let _ = FIRAuth.auth()?.currentUser {
             loadAnonimousUser()
     
@@ -104,7 +101,6 @@ class MainTimeLine: UITableViewController {
           //   } catch let error {
           //       print("\(error.localizedDescription)")
           //   }
-            
         }
     }
     
@@ -122,7 +118,6 @@ class MainTimeLine: UITableViewController {
         }
         return model.count
     }
-    
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
