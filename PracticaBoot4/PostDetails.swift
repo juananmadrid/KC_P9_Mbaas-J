@@ -3,9 +3,11 @@ import Firebase
 
 class PostDetails: UIViewController {
 
-    @IBOutlet weak var titlePost: UILabel!
+    
+    @IBOutlet weak var posTitle: UILabel!
     @IBOutlet weak var numVal: UILabel!
     @IBOutlet weak var medVal: UILabel!
+    
     
     typealias PostType = Dictionary<String, Any>
     var post : PostType = [:]
@@ -13,9 +15,14 @@ class PostDetails: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        titlePost.text = post["Title"] as! String?
-//        numVal.text = post["NumValorations"] as! String?
-//        medVal.text = post["MedValoration"] as! String?
+        let numValorations = post["NumValorations"] as! Double
+        let totalValoration = post["MedValoration"] as! Double
+        
+        numVal.text = numValorations.description
+        medVal.text = totalValoration.description
+        
+        
+        posTitle.text = post["Title"] as! String?
         
     }
 

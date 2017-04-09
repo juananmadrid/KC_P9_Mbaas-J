@@ -66,15 +66,16 @@ class PostReview: UIViewController {
         
         DispatchQueue.global().sync {
             
-            // Obtenemos postId del post valorado
+            // Obtenemos postId del post valorado y usuario actual
             let postId = post["postId"] as! String
+            let currentUserId = FIRAuth.auth()?.currentUser?.uid
             
-            // Sumamos nueva valoración al total
+            // Rutas
             let rootRef = FIRDatabase.database().reference()
             let publishRef = rootRef.child("publishedPosts")
+            let userRef = rootRef.child("Users").child(currentUserId!)
             
             // Descargamos valoración TotalValoration y NumValorations
-            
             let totalValoration = post["TotalValoration"] as! Float
             let numValorations = post["NumValorations"] as! Float
             
@@ -85,11 +86,17 @@ class PostReview: UIViewController {
             // Recalculamos su media
             let medValoration : Float = actualizedTotalValoration / actualizedNumValoration
             
-            // Subimos los resultados al backend
+            // Subimos los resultados al backend, rama publish
             publishRef.child(postId).updateChildValues(["MedValoration" : medValoration])
             publishRef.child(postId).updateChildValues(["NumValorations" : actualizedNumValoration])
             publishRef.child(postId).updateChildValues(["TotalValoration" : actualizedTotalValoration])
 
+            // Subimos los resultados al backend, rama Users, para mantener ambas actualizadas
+            userRef.child(postId).updateChildValues(["MedValoration" : medValoration])
+            userRef.child(postId).updateChildValues(["NumValorations" : actualizedNumValoration])
+            userRef.child(postId).updateChildValues(["TotalValoration" : actualizedTotalValoration])
+
+            
         }
         
     }

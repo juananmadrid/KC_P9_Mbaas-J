@@ -203,14 +203,13 @@ class AuthorPostList: UITableViewController {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 
                 vc.post = model[indexPath.row]
+                
             }
-            
         }
     }
     
     
 }
-
 
 
 // MARK: - UTILS
