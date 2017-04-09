@@ -109,7 +109,7 @@ class NewPostController: UIViewController, UIImagePickerControllerDelegate, UINa
                 "postId": "",
                 "Date" : utcTimeZoneStr
         ]
-        // Como ref. de la imagen en post podemos usar el nombre, url u gs.
+         // Como ref. de la imagen en post podemos usar el nombre, url u gs.
       
         DispatchQueue.global().async{
             // Uid de usuario
