@@ -56,6 +56,8 @@ class MainTimeLine: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        FIRAnalytics.setScreenName("MainTimeLine", screenClass: "Users")
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

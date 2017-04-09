@@ -66,6 +66,9 @@ class PostReview: UIViewController {
         
         DispatchQueue.global().sync {
             
+            let valorations = self.rateSlider.value.description
+            FIRAnalytics.logEvent(withName: "Valorations", parameters: ["Valorations" : valorations as NSObject])
+            
             // Obtenemos postId del post valorado y usuario actual
             let postId = post["postId"] as! String
             let currentUserId = FIRAuth.auth()?.currentUser?.uid

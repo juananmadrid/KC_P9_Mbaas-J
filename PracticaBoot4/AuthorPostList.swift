@@ -13,6 +13,8 @@ class AuthorPostList: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        FIRAnalytics.setScreenName("AuthorPostList",
+                                   screenClass: "Authors")
         
         self.refreshControl?.addTarget(self, action: #selector(hadleRefresh(_:)), for: UIControlEvents.valueChanged)
     }

@@ -32,13 +32,6 @@ En la parte superior izquierda se ha incluido un botón de Logout para salir, el
 
 Se ha permitido la creación de **post sin foto**, en cuyo caso se añade automáticamente una foto similando que esta vacía (silla vacía) para mejorar la estética de los listados sin huecos en ellos.
 
-**NOTAS SOBRE LA IMPLEMENTACIÓN**
-
-La **actualización de posts** en la zona pública se hace de manera continua detectando cambios en servidor e actualizando nuevos posts publicados y posts borrados. Si bien el enunciado de la práctica indica que se haga al menos una vez al día en lugar de hacerlo de forma simultánea para ahorrar tráfico de datos, como no sé como programar esta función en Firebase no lo he implementado así. En ese caso, en lugar de usar "root.observe()" usaríamos "root.observeSingleEvent(of:)". 
-
-El código implementado incluye la **ordenación de la tabla de posts** por fecha usando "root.queryOrdered(byChild: "Date")", usando como criterio de ordenación la fecha de creación del post que se guarda en su diccionario también, pero no he conseguido que me funcione la ordenación, ni por ese ni por otro criterio y por más documentación que he consultado no veo el error en el código. 
-
-
 
 FIREBASE DATABASE Y STORAGE
 ---------------------------------------------
@@ -65,15 +58,28 @@ Mediante un botón "+" en la parte superior derecha de la pantalla podemos acced
 
 Los posts son descargados, subidos y actualizados en el backend de Firebase.
 
+ANALYTICS
+---------------------------------------------
+
+He incluido analíticas en MainTimeLine para estadísticas de usuarios que entran en la app para ver posts como "Users" y en AuthorPostList para estadísticas de usuarios que escriben posts como "Authors".
+
+También he incluido a modo de ejemplo el envío de eventos con las valoraciones por si nos sirven a modo estadístico. 
 
 NOTAS SOBRE LA IMPLEMENTACIÓN
 ---------------------------------------------
 
 He seleccionado la estrategia de usar en Firebase Database otra ruta para los **post publicados** donde se duplican estos por dos razones. Por un lado, no me fio mucho de que funcione después de que la ordenación no me funcione viendo que son métodos muy parecidos y he optado por esta opción para poder seguir avanzando y al final si tengo un poco de timpo lo revisaré. Por otro lado, porque así nos permite tratarlos a todos de manera global, por ejemplo, para observar cambios solo en los publicados si nos interesa, etc.  
 
-El ultimo día he tenido problemas para usar los botones de **slide para BORRAR y PUBLICAR**. Aparecen pero no del todo al desplazar el ratón o se ocultan antes de poder pulsarlos. Funcionaban correctamente hasta el último día, pero no he podido comprobar si lo siguen haciendo tras hacer algunos cambios en el código el último día y como además he tenido que habilitar el pago por uso en Firebase porque he completado el máximo permitido en Storage con tanto subir y bajar imágenes no puedo probar mucho más. 
+El ultimo día he tenido problemas para usar los botones de **slide para BORRAR y PUBLICAR**. Aparecen pero no del todo al desplazar el ratón o se ocultan antes de poder pulsarlos. Funcionaban correctamente hasta el último día, pero no he podido comprobar si lo siguen haciendo tras hacer algunos cambios en el código el último día y como además he tenido que habilitar el pago por uso en Firebase porque he completado el máximo permitido en Storage con tanto subir y bajar imágenes no puedo probar mucho más.
 
-Para alguien que no ha programado nunca antes del bootcamp la verdad es que me ha servido para aprender mucho de backends e iOS.
+La **actualización de posts** en la zona pública se hace de manera continua detectando cambios en servidor e actualizando nuevos posts publicados y posts borrados. Si bien el enunciado de la práctica indica que se haga al menos una vez al día en lugar de hacerlo de forma simultánea para ahorrar tráfico de datos, como no sé como programar esta función en Firebase no lo he implementado así. En ese caso, en lugar de usar "root.observe()" usaríamos "root.observeSingleEvent(of:)". 
+
+El código implementado incluye la **ordenación de la tabla de posts** por fecha usando "root.queryOrdered(byChild: "Date")", usando como criterio de ordenación la fecha de creación del post que se guarda en su diccionario también, pero no he conseguido que me funcione la ordenación, ni por ese ni por otro criterio y por más documentación que he consultado no veo el error en el código. 
+
+Finalmente, no me ha dado tiempo a incluir las Push Notifications. Prefiero verlas con tranquilidad que hacerlo sin prisas después de los problemas con los vídeos.
+
+
+Para alguien que no ha programado nunca antes del bootcamp la verdad es que me ha servido para aprender mucho de backends y profundizar más en iOS.
  
 
 
