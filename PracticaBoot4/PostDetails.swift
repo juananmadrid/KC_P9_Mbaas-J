@@ -21,7 +21,6 @@ class PostDetails: UIViewController {
         numVal.text = numValorations.description
         medVal.text = totalValoration.description
         
-        
         posTitle.text = post["Title"] as! String?
         
     }

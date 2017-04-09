@@ -10,8 +10,6 @@ class MainTimeLine: UITableViewController {
     var model : [PostType] = []
     let cellIdentier = "POSTSCELL"
     
-    // Creamos rama en DB para las newvar   let postsRef = FIRDatabase.database().reference().child("News")
-    
 
     // MARK: - FIREBASE
 
@@ -106,6 +104,7 @@ class MainTimeLine: UITableViewController {
           //   } catch let error {
           //       print("\(error.localizedDescription)")
           //   }
+            
         }
     }
     
