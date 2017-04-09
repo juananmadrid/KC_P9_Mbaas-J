@@ -1,5 +1,6 @@
 import UIKit
 import Firebase
+import Foundation
 
 class PostReview: UIViewController {
 
@@ -11,10 +12,45 @@ class PostReview: UIViewController {
     typealias PostType = Dictionary<String, Any>
     var post : PostType = [:]
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        postTxt.text = post["Description"] as! String?
+        titleTxt.text = post["Title"] as! String?
+        
+        DispatchQueue.global().sync {
+            
+            // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+            let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+            let userImagesRef = storageRef.child("userImages")
+            // Referencia de la imagen
+            let nameImage = post["PhotoStorageName"] as! String
+            let imageRef = userImagesRef.child(nameImage)
+            
+            // Descargamos imagen
+            
+            _ = imageRef.data(withMaxSize: 1 * 1024 * 1024) { (data, error) in
+                if (error != nil) {
+                    print("error el bajar la imagen")
+                } else {
+                    let image = UIImage(data: data! as Data)
+                    let imageView = UIImageView(image: image)
+                    
+                    DispatchQueue.main.async {
+                        self.imagePost = imageView
+                        // Recargamos imagen para cargar las imágenes al arrancar la vista
+                        // sino, como se cargan aquí dentro de la closure se cargarían después
+                        self.imagePost.reloadInputViews()
+                    }
+                }
+            }
+            
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
     }
 
     override func didReceiveMemoryWarning() {

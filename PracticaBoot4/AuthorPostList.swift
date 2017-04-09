@@ -166,19 +166,52 @@ class AuthorPostList: UITableViewController {
                 let rootPublish = rootRef.child("publishedPosts")
                 
                 // Obtenemos referencia al post seleccionado (es la key del array)
-                let postDict = self.model[indexPath.row] as Dictionary
-                let postId = postDict["postId"] as! String
+                let post = self.model[indexPath.row] as Dictionary
+                let postId = post["postId"] as! String
                 
                 // Eliminamos post seleccionado
                 userCurrentRef.child(postId).setValue(nil)
                 rootPublish.child(postId).setValue(nil)
+                
+                // Eliminamos también las imagenes del Storage
+                let imageName = post["PhotoStorageName"] as! String
+                let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
+                let userImagesRef = storageRef.child("userImages")
+                let imageRef = userImagesRef.child(imageName)
+                
+                imageRef.delete(completion: { (error) in
+                    if let _ = error {
+                        print("Error al eliminar imagen")
+                    } else {
+                        print("Imagen borrada correctamente")
+                    }
+                })
+                
             }
         }
         return [publish, deleteRow]
     }
 
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        if segue.identifier == "ShowPostDetails" {
+            let vc = segue.destination as! PostDetails
+            
+            // aqui pasamos el post seleccionado
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                
+                vc.post = model[indexPath.row]
+            }
+            
+        }
+    }
+    
+    
 }
+
+
 
 // MARK: - UTILS
 

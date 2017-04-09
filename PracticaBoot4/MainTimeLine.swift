@@ -135,7 +135,7 @@ class MainTimeLine: UITableViewController {
 
         DispatchQueue.global().async {
             
-            // Obtenemos imagen desde nombre de la mimsa y su referencia en Storage
+            // Obtenemos imagen desde nombre de la misma y su referencia en Storage
             let storageRef = FIRStorage.storage().reference(forURL: "gs://kcpracticaboot4.appspot.com")
             let userImagesRef = storageRef.child("userImages")
             // Referencia de la imagen
